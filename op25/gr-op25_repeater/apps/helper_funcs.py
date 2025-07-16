@@ -66,14 +66,16 @@ def get_key_dict(keys_file, _id = 0):      # used to read crypt keys files
     else:
         raw_config = json.loads(open(keys_file, encoding="utf-8-sig").read())
     for dict_key in raw_config.keys():     # iterate through dict and convert strings to integers
-        keyid = int(str(dict_key), 0)
-        algid = int(str(from_dict(raw_config[dict_key], "algid", "0")), 0)
+        keyid = int(dict_key, 0)
+        algid = int(from_dict(raw_config[dict_key], "algid", "0"), 0)
         keys_config[keyid] = {}
         keys_config[keyid]['algid'] = algid
         keys_config[keyid]['key'] = []
         raw_kval = from_dict(raw_config[dict_key], "key", [])
+        if not isinstance(raw_kval, list):
+            raw_kval = [raw_kval]
         for kval in raw_kval:
-            keys_config[keyid]['key'].append(int(str(kval), 0))
+            keys_config[keyid]['key'].append(int(kval, 0))
     return keys_config
 
 def get_int_dict(s, _id = 0):      # used to read blacklist/whitelist files
